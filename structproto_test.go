@@ -19,7 +19,7 @@ type mockCharacter struct {
 
 func TestResolveCharacterStruct(t *testing.T) {
 	c := mockCharacter{}
-	prototype, err := Prototypify(&c, &StructProtoOption{
+	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName:             "demo",
 		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
 	})
@@ -88,14 +88,14 @@ func TestResolveCharacterStruct(t *testing.T) {
 
 func TestVisit_Failed(t *testing.T) {
 	c := mockCharacter{}
-	prototype, err := Prototypify(&c, &StructProtoOption{
+	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName:             "demo",
 		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
 	})
 	if err != nil {
 		t.Error(err)
 	}
-	err = prototype.BindValues(FieldValueMap{
+	err = prototype.BindFields(map[string]interface{}{
 		"NAME":          "luffy",
 		"ALIAS":         "lucy",
 		"DATE_OF_BIRTH": "2020-05-05T00:00:00Z",
@@ -107,7 +107,7 @@ func TestVisit_Failed(t *testing.T) {
 
 func TestVisit(t *testing.T) {
 	c := mockCharacter{}
-	prototype, err := Prototypify(&c, &StructProtoOption{
+	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName:             "demo",
 		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
 	})
@@ -157,7 +157,7 @@ func TestProcess_MissingRequiredField(t *testing.T) {
 	}
 
 	c := mockCharacter{}
-	prototype, err := Prototypify(&c, &StructProtoOption{
+	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName:             "demo",
 		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
 	})
@@ -188,7 +188,7 @@ func TestProcess(t *testing.T) {
 	}
 
 	c := mockCharacter{}
-	prototype, err := Prototypify(&c, &StructProtoOption{
+	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName:             "demo",
 		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
 	})
@@ -245,7 +245,7 @@ func (p *mockMapStructBinder) Deinit(context *StructProtoContext) error {
 func TestUrlTagResolver(t *testing.T) {
 	v := mockUrlPathManager{}
 	prototype, err := Prototypify(&v,
-		&StructProtoOption{
+		&StructProtoResolveOption{
 			TagName:             "url",
 			ValueBinderProvider: valuebinder.BuildStringArgsBinder,
 			TagResolver:         resolveUrlTag,

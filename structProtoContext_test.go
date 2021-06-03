@@ -9,7 +9,7 @@ import (
 
 func TestStructProtoContext(t *testing.T) {
 	c := mockCharacter{}
-	prototype, err := Prototypify(&c, &StructProtoOption{
+	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName:             "demo",
 		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
 	})
@@ -48,11 +48,11 @@ func TestStructProtoContext(t *testing.T) {
 		}
 	}
 
-	if !context.IsRequireField("NAME") {
-		t.Errorf("assert 'structprotoContext.IsRequireField(\"NAME\")':: expected '%#v', got '%#v'", expectedRequiredFields, context.IsRequireField("NAME"))
+	if !context.IsRequiredField("NAME") {
+		t.Errorf("assert 'structprotoContext.IsRequiredField(\"NAME\")':: expected '%#v', got '%#v'", expectedRequiredFields, context.IsRequiredField("NAME"))
 	}
-	if context.IsRequireField("unknown") {
-		t.Errorf("assert 'structprotoContext.IsRequireField(\"unknown\")':: expected '%#v', got '%#v'", expectedRequiredFields, context.IsRequireField("unknown"))
+	if context.IsRequiredField("unknown") {
+		t.Errorf("assert 'structprotoContext.IsRequiredField(\"unknown\")':: expected '%#v', got '%#v'", expectedRequiredFields, context.IsRequiredField("unknown"))
 	}
 
 	// TODO: test context.ChechIfMissingRequireFields

@@ -52,7 +52,7 @@ func (s *Struct) BindFields(values map[string]interface{}) error {
 	return s.BindValues(FieldValueMap(values))
 }
 
-func (s *Struct) BindValues(values FieldValueCollectionIterator) error {
+func (s *Struct) BindValues(iterator FieldValueCollectionIterator) error {
 	if s == nil {
 		return nil
 	}
@@ -60,7 +60,7 @@ func (s *Struct) BindValues(values FieldValueCollectionIterator) error {
 	var requiredFields = s.requiredFields.Clone()
 
 	// mapping values
-	for p := range values.Iterate() {
+	for p := range iterator.Iterate() {
 		field, val := p.Field, p.Value
 		if val != nil {
 			binder := s.makeFieldBinder(s.value, field)

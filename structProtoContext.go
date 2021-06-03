@@ -27,7 +27,7 @@ func (ctx *StructProtoContext) AllRequiredFields() []string {
 	return ctx.requiredFields
 }
 
-func (ctx *StructProtoContext) IsRequireField(name string) bool {
+func (ctx *StructProtoContext) IsRequiredField(name string) bool {
 	field := ctx.Field(name)
 	if field != nil {
 		return field.HasFlag(RequiredFlag)

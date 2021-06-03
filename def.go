@@ -40,7 +40,7 @@ type (
 		Deinit(context *StructProtoContext) error
 	}
 
-	StructProtoOption struct {
+	StructProtoResolveOption struct {
 		TagName             string
 		ValueBinderProvider ValueBinderProvider
 		TagResolver         TagResolver

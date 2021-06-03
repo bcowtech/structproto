@@ -3,12 +3,37 @@ package structproto
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/bcowtech/structproto/tagresolver"
+	"github.com/bcowtech/structproto/valuebinder"
 )
 
 type StructProtoResolver struct {
-	TagName             string
-	ValueBinderProvider ValueBinderProvider
-	TagResolver         TagResolver
+	tagName             string
+	valueBinderProvider ValueBinderProvider
+	tagResolver         TagResolver
+}
+
+func NewStructProtoResolver(option *StructProtoResolveOption) *StructProtoResolver {
+	if option == nil {
+		panic("specified argument 'option' cannot be nil")
+	}
+
+	r := &StructProtoResolver{
+		tagName:             option.TagName,
+		valueBinderProvider: option.ValueBinderProvider,
+		tagResolver:         option.TagResolver,
+	}
+
+	// use BuildIgnoreBinder if missing
+	if r.valueBinderProvider == nil {
+		r.valueBinderProvider = valuebinder.BuildIgnoreBinder
+	}
+	// use StdTagResolver if missing
+	if r.tagResolver == nil {
+		r.tagResolver = tagresolver.StdTagResolver
+	}
+	return r
 }
 
 func (r *StructProtoResolver) Resolve(target interface{}) (*Struct, error) {
@@ -30,7 +55,7 @@ func (r *StructProtoResolver) Resolve(target interface{}) (*Struct, error) {
 		}
 		switch rv.Kind() {
 		case reflect.Struct:
-			info, err := r.ResolveAllField(rv)
+			info, err := r.internalResolve(rv)
 			if err != nil {
 				return nil, err
 			}
@@ -47,18 +72,18 @@ func (r *StructProtoResolver) Resolve(target interface{}) (*Struct, error) {
 	return nil, nil
 }
 
-func (r *StructProtoResolver) ResolveAllField(rv reflect.Value) (*Struct, error) {
+func (r *StructProtoResolver) internalResolve(rv reflect.Value) (*Struct, error) {
 	var prototype = buildStruct(rv)
-	if r.ValueBinderProvider == nil {
+	if r.valueBinderProvider == nil {
 		return nil, fmt.Errorf("missing ValueBinderProvider")
 	}
-	prototype.valueBinderProvider = r.ValueBinderProvider
+	prototype.valueBinderProvider = r.valueBinderProvider
 	t := rv.Type()
 	count := t.NumField()
 	for i := 0; i < count; i++ {
 		fieldname := t.Field(i).Name
-		token := t.Field(i).Tag.Get(r.TagName)
-		tag, err := r.TagResolver(fieldname, token)
+		token := t.Field(i).Tag.Get(r.tagName)
+		tag, err := r.tagResolver(fieldname, token)
 		if err != nil {
 			return nil, err
 		}

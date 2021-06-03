@@ -14,4 +14,4 @@ var (
 	typeOfTime     = reflect.TypeOf(time.Time{})
 )
 
-func BuildNilBinder(rv reflect.Value) internal.ValueBinder { return nil }
+func BuildIgnoreBinder(rv reflect.Value) internal.ValueBinder { return nil }
