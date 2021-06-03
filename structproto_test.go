@@ -275,7 +275,7 @@ type mockUrlPathManager struct {
 	Echo string `url:"/Echo"`
 }
 
-func UrlTagresolve(fieldname, token string) (*Tag, error) {
+func resolveUrlTag(fieldname, token string) (*Tag, error) {
 	var tag *Tag
 	if len(token) > 0 {
 		if token != "-" {
