@@ -95,7 +95,7 @@ func TestVisit_Failed(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = prototype.BindValues(NamedValues{
+	err = prototype.BindValues(FieldValueMap{
 		"NAME":          "luffy",
 		"ALIAS":         "lucy",
 		"DATE_OF_BIRTH": "2020-05-05T00:00:00Z",
@@ -114,7 +114,7 @@ func TestVisit(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = prototype.BindValues(NamedValues{
+	err = prototype.BindValues(FieldValueMap{
 		"NAME":          "luffy",
 		"AGE":           "19",
 		"ALIAS":         "lucy",
@@ -254,7 +254,7 @@ func TestUrlTagResolver(t *testing.T) {
 		t.Error(err)
 	}
 
-	err = prototype.BindValues(NamedValues{
+	err = prototype.BindValues(FieldValueMap{
 		"/":     "root",
 		"/Echo": "echo",
 	})

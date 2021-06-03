@@ -44,7 +44,15 @@ func (s *Struct) Bind(binder StructBinder) error {
 	return nil
 }
 
-func (s *Struct) BindValues(values KeyValuePairIterator) error {
+func (s *Struct) BindFields(values map[string]interface{}) error {
+	if s == nil {
+		return nil
+	}
+
+	return s.BindValues(FieldValueMap(values))
+}
+
+func (s *Struct) BindValues(values FieldValueCollectionIterator) error {
 	if s == nil {
 		return nil
 	}
@@ -53,7 +61,7 @@ func (s *Struct) BindValues(values KeyValuePairIterator) error {
 
 	// mapping values
 	for p := range values.Iterate() {
-		field, val := p.Key, p.Value
+		field, val := p.Field, p.Value
 		if val != nil {
 			binder := s.makeFieldBinder(s.value, field)
 			if binder != nil {

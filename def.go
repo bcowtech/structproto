@@ -17,13 +17,13 @@ type (
 
 	ValueBinderProvider func(rv reflect.Value) ValueBinder
 
-	KeyValuePair struct {
-		Key   string
+	FieldValueEntry struct {
+		Field string
 		Value interface{}
 	}
 
-	KeyValuePairIterator interface {
-		Iterate() <-chan KeyValuePair
+	FieldValueCollectionIterator interface {
+		Iterate() <-chan FieldValueEntry
 	}
 
 	FieldInfo interface {
