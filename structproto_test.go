@@ -243,7 +243,7 @@ func (p *mockMapStructBinder) Deinit(context *StructProtoContext) error {
 }
 
 func TestUrlTagResolver(t *testing.T) {
-	v := MockUrlPathManager{}
+	v := mockUrlPathManager{}
 	prototype, err := Prototypify(&v,
 		&StructProtoOption{
 			TagName:             "url",
@@ -263,19 +263,19 @@ func TestUrlTagResolver(t *testing.T) {
 	}
 
 	if v.Root != "root" {
-		t.Errorf("assert 'MockUrlPathManager.Root':: expected '%v', got '%v'", "root", v.Root)
+		t.Errorf("assert 'mockUrlPathManager.Root':: expected '%v', got '%v'", "root", v.Root)
 	}
 	if v.Echo != "echo" {
-		t.Errorf("assert 'MockUrlPathManager.Echo':: expected '%v', got '%v'", "echo", v.Echo)
+		t.Errorf("assert 'mockUrlPathManager.Echo':: expected '%v', got '%v'", "echo", v.Echo)
 	}
 }
 
-type MockUrlPathManager struct {
+type mockUrlPathManager struct {
 	Root string `url:"/"`
 	Echo string `url:"/Echo"`
 }
 
-func resolveUrlTag(fieldname, token string) (*Tag, error) {
+func UrlTagresolve(fieldname, token string) (*Tag, error) {
 	var tag *Tag
 	if len(token) > 0 {
 		if token != "-" {
