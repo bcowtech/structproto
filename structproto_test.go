@@ -21,7 +21,6 @@ func TestResolveCharacterStruct(t *testing.T) {
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName:             "demo",
-		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
 	})
 	if err != nil {
 		t.Error(err)
@@ -89,8 +88,7 @@ func TestResolveCharacterStruct(t *testing.T) {
 func TestVisit_Failed(t *testing.T) {
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
-		TagName:             "demo",
-		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
+		TagName: "demo",
 	})
 	if err != nil {
 		t.Error(err)
@@ -99,7 +97,7 @@ func TestVisit_Failed(t *testing.T) {
 		"NAME":          "luffy",
 		"ALIAS":         "lucy",
 		"DATE_OF_BIRTH": "2020-05-05T00:00:00Z",
-	})
+	}, valuebinder.BuildStringArgsBinder)
 	if err == nil {
 		t.Errorf("the 'Mapper.Map()' should throw '%s' error", "with missing symbol 'AGE'")
 	}
@@ -108,8 +106,7 @@ func TestVisit_Failed(t *testing.T) {
 func TestVisit(t *testing.T) {
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
-		TagName:             "demo",
-		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
+		TagName: "demo",
 	})
 	if err != nil {
 		t.Error(err)
@@ -120,7 +117,7 @@ func TestVisit(t *testing.T) {
 		"ALIAS":         "lucy",
 		"DATE_OF_BIRTH": "2020-05-05T00:00:00Z",
 		"NUMBERS":       "5,12",
-	})
+	}, valuebinder.BuildStringArgsBinder)
 	if err != nil {
 		t.Error(err)
 	}
@@ -159,7 +156,6 @@ func TestProcess_MissingRequiredField(t *testing.T) {
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName:             "demo",
-		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
 	})
 
 	err = prototype.Bind(binder)
@@ -190,7 +186,6 @@ func TestProcess(t *testing.T) {
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName:             "demo",
-		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
 	})
 	err = prototype.Bind(binder)
 	if err != nil {
@@ -233,7 +228,7 @@ func (p *mockMapStructBinder) Deinit(context *StructProtoContext) error {
 	return context.CheckIfMissingRequiredFields(func() <-chan string {
 		c := make(chan string)
 		go func() {
-			for k, _ := range p.values {
+			for k := range p.values {
 				c <- k
 			}
 			close(c)
@@ -246,9 +241,8 @@ func TestUrlTagResolver(t *testing.T) {
 	v := mockUrlPathManager{}
 	prototype, err := Prototypify(&v,
 		&StructProtoResolveOption{
-			TagName:             "url",
-			ValueBinderProvider: valuebinder.BuildStringArgsBinder,
-			TagResolver:         resolveUrlTag,
+			TagName:     "url",
+			TagResolver: resolveUrlTag,
 		})
 	if err != nil {
 		t.Error(err)
@@ -257,7 +251,7 @@ func TestUrlTagResolver(t *testing.T) {
 	err = prototype.BindValues(FieldValueMap{
 		"/":     "root",
 		"/Echo": "echo",
-	})
+	}, valuebinder.BuildStringArgsBinder)
 	if err != nil {
 		t.Error(err)
 	}

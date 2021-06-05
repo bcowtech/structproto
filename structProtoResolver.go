@@ -5,13 +5,11 @@ import (
 	"reflect"
 
 	"github.com/bcowtech/structproto/tagresolver"
-	"github.com/bcowtech/structproto/valuebinder"
 )
 
 type StructProtoResolver struct {
-	tagName             string
-	valueBinderProvider ValueBinderProvider
-	tagResolver         TagResolver
+	tagName     string
+	tagResolver TagResolver
 }
 
 func NewStructProtoResolver(option *StructProtoResolveOption) *StructProtoResolver {
@@ -20,15 +18,10 @@ func NewStructProtoResolver(option *StructProtoResolveOption) *StructProtoResolv
 	}
 
 	r := &StructProtoResolver{
-		tagName:             option.TagName,
-		valueBinderProvider: option.ValueBinderProvider,
-		tagResolver:         option.TagResolver,
+		tagName:     option.TagName,
+		tagResolver: option.TagResolver,
 	}
 
-	// use BuildIgnoreBinder if missing
-	if r.valueBinderProvider == nil {
-		r.valueBinderProvider = valuebinder.BuildIgnoreBinder
-	}
 	// use StdTagResolver if missing
 	if r.tagResolver == nil {
 		r.tagResolver = tagresolver.StdTagResolver
@@ -74,10 +67,6 @@ func (r *StructProtoResolver) Resolve(target interface{}) (*Struct, error) {
 
 func (r *StructProtoResolver) internalResolve(rv reflect.Value) (*Struct, error) {
 	var prototype = buildStruct(rv)
-	if r.valueBinderProvider == nil {
-		return nil, fmt.Errorf("missing ValueBinderProvider")
-	}
-	prototype.valueBinderProvider = r.valueBinderProvider
 	t := rv.Type()
 	count := t.NumField()
 	for i := 0; i < count; i++ {

@@ -41,8 +41,7 @@ type (
 	}
 
 	StructProtoResolveOption struct {
-		TagName             string
-		ValueBinderProvider ValueBinderProvider
-		TagResolver         TagResolver
+		TagName     string
+		TagResolver TagResolver
 	}
 )

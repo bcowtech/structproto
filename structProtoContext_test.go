@@ -3,15 +3,12 @@ package structproto
 import (
 	"reflect"
 	"testing"
-
-	"github.com/bcowtech/structproto/valuebinder"
 )
 
 func TestStructProtoContext(t *testing.T) {
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
-		TagName:             "demo",
-		ValueBinderProvider: valuebinder.BuildStringArgsBinder,
+		TagName: "demo",
 	})
 	if err != nil {
 		t.Error(err)

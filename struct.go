@@ -1,6 +1,7 @@
 package structproto
 
 import (
+	"fmt"
 	"reflect"
 )
 
@@ -9,8 +10,6 @@ type Struct struct {
 
 	fields         map[string]*Field
 	requiredFields FieldFlagSet
-
-	valueBinderProvider ValueBinderProvider
 }
 
 func (s *Struct) Bind(binder StructBinder) error {
@@ -44,17 +43,20 @@ func (s *Struct) Bind(binder StructBinder) error {
 	return nil
 }
 
-func (s *Struct) BindFields(values map[string]interface{}) error {
+func (s *Struct) BindFields(values map[string]interface{}, buildValueBinder ValueBinderProvider) error {
 	if s == nil {
 		return nil
 	}
 
-	return s.BindValues(FieldValueMap(values))
+	return s.BindValues(FieldValueMap(values), buildValueBinder)
 }
 
-func (s *Struct) BindValues(iterator FieldValueCollectionIterator) error {
+func (s *Struct) BindValues(iterator FieldValueCollectionIterator, buildValueBinder ValueBinderProvider) error {
 	if s == nil {
 		return nil
+	}
+	if buildValueBinder == nil {
+		return fmt.Errorf("missing ValueBinderProvider")
 	}
 
 	var requiredFields = s.requiredFields.Clone()
@@ -63,7 +65,7 @@ func (s *Struct) BindValues(iterator FieldValueCollectionIterator) error {
 	for p := range iterator.Iterate() {
 		field, val := p.Field, p.Value
 		if val != nil {
-			binder := s.makeFieldBinder(s.value, field)
+			binder := s.makeFieldBinder(s.value, field, buildValueBinder)
 			if binder != nil {
 				err := binder.Bind(val)
 				if err != nil {
@@ -88,12 +90,12 @@ func (s *Struct) BindValues(iterator FieldValueCollectionIterator) error {
 	return nil
 }
 
-func (s *Struct) makeFieldBinder(rv reflect.Value, name string) ValueBinder {
+func (s *Struct) makeFieldBinder(rv reflect.Value, name string, buildValueBinder ValueBinderProvider) ValueBinder {
 	if s == nil {
 		return nil
 	}
 	if f, ok := s.fields[name]; ok {
-		binder := s.valueBinderProvider(rv.Field(f.index))
+		binder := buildValueBinder(rv.Field(f.index))
 		return binder
 	}
 	return nil
