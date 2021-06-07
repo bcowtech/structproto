@@ -91,9 +91,6 @@ func (s *Struct) BindValues(iterator FieldValueCollectionIterator, buildValueBin
 }
 
 func (s *Struct) makeFieldBinder(rv reflect.Value, name string, buildValueBinder ValueBinderProvider) ValueBinder {
-	if s == nil {
-		return nil
-	}
 	if f, ok := s.fields[name]; ok {
 		binder := buildValueBinder(rv.Field(f.index))
 		return binder
@@ -101,7 +98,7 @@ func (s *Struct) makeFieldBinder(rv reflect.Value, name string, buildValueBinder
 	return nil
 }
 
-func buildStruct(value reflect.Value) *Struct {
+func makeStruct(value reflect.Value) *Struct {
 	prototype := Struct{
 		value:  value,
 		fields: make(map[string]*Field),

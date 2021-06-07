@@ -66,7 +66,7 @@ func (r *StructProtoResolver) Resolve(target interface{}) (*Struct, error) {
 }
 
 func (r *StructProtoResolver) internalResolve(rv reflect.Value) (*Struct, error) {
-	var prototype = buildStruct(rv)
+	var prototype = makeStruct(rv)
 	t := rv.Type()
 	count := t.NumField()
 	for i := 0; i < count; i++ {
