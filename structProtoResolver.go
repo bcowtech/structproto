@@ -23,8 +23,14 @@ func NewStructProtoResolver(option *StructProtoResolveOption) *StructProtoResolv
 	}
 
 	// use StdTagResolver if missing
+	// - or -
+	// use NoneTagResolver if unassign both TagResolver and TagName
 	if r.tagResolver == nil {
-		r.tagResolver = tagresolver.StdTagResolver
+		if len(r.tagName) > 0 {
+			r.tagResolver = tagresolver.StdTagResolver
+		} else {
+			r.tagResolver = tagresolver.NoneTagResolver
+		}
 	}
 	return r
 }
@@ -71,7 +77,7 @@ func (r *StructProtoResolver) internalResolve(rv reflect.Value) (*Struct, error)
 	count := t.NumField()
 	for i := 0; i < count; i++ {
 		fieldname := t.Field(i).Name
-		token := t.Field(i).Tag.Get(r.tagName)
+		token := r.getTagContent(t.Field(i))
 		tag, err := r.tagResolver(fieldname, token)
 		if err != nil {
 			return nil, err
@@ -91,4 +97,11 @@ func (r *StructProtoResolver) internalResolve(rv reflect.Value) (*Struct, error)
 		}
 	}
 	return prototype, nil
+}
+
+func (r *StructProtoResolver) getTagContent(field reflect.StructField) string {
+	if len(r.tagName) > 0 {
+		return field.Tag.Get(r.tagName)
+	}
+	return ""
 }
