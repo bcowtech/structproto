@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/bcowtech/types"
 )
 
 func TestStringArgValueBinder_WithBool(t *testing.T) {
@@ -94,6 +96,23 @@ func TestStringArgValueBinder_WithIntArray(t *testing.T) {
 	}
 
 	expected := []int{1, 1, 2, 3, 5, 8, 13}
+	if !reflect.DeepEqual(target, expected) {
+		t.Errorf("assert 'target':: expected '%#v', got '%#v'", expected, target)
+	}
+}
+
+func TestStringArgValueBinder_WithRawContent(t *testing.T) {
+	var target types.RawContent
+	var input = "binary content"
+
+	rv := reflect.ValueOf(&target).Elem()
+	binder := StringArgsBinder(rv)
+	err := binder.Bind(input)
+	if err != nil {
+		t.Error(err)
+	}
+
+	expected := types.RawContent("binary content")
 	if !reflect.DeepEqual(target, expected) {
 		t.Errorf("assert 'target':: expected '%#v', got '%#v'", expected, target)
 	}

@@ -9,6 +9,7 @@ import (
 
 	"github.com/bcowtech/structproto/internal"
 	"github.com/bcowtech/structproto/util/reflectutil"
+	"github.com/bcowtech/types"
 	"github.com/cstockton/go-conv"
 )
 
@@ -48,17 +49,23 @@ func (binder StringArgsBinder) bindStringValueImpl(rv reflect.Value, v string) e
 			return &ValueBindingError{v, rv.Type().String(), err}
 		}
 	case reflect.Array, reflect.Slice:
-		if len(v) > 0 {
-			array := strings.Split(v, ",")
-			size := len(array)
-			container := reflect.MakeSlice(rv.Type(), size, size)
-			for i, elem := range array {
-				err := binder.bindStringValueImpl(container.Index(i), elem)
-				if err != nil {
-					return err
+		switch rv.Type() {
+		case typeOfRawContent:
+			buf := []byte(v)
+			rv.Set(reflect.ValueOf(types.RawContent(buf)))
+		default:
+			if len(v) > 0 {
+				array := strings.Split(v, ",")
+				size := len(array)
+				container := reflect.MakeSlice(rv.Type(), size, size)
+				for i, elem := range array {
+					err := binder.bindStringValueImpl(container.Index(i), elem)
+					if err != nil {
+						return err
+					}
 				}
+				rv.Set(container)
 			}
-			rv.Set(container)
 		}
 	case reflect.Bool:
 		bool, err := strconv.ParseBool(v)
