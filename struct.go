@@ -6,7 +6,7 @@ import (
 )
 
 type Struct struct {
-	value reflect.Value
+	target reflect.Value
 
 	fields         map[string]*Field
 	requiredFields FieldFlagSet
@@ -30,7 +30,7 @@ func (s *Struct) Bind(binder StructBinder) error {
 
 	// bind all fields
 	for _, field := range s.fields {
-		err := binder.Bind(field, s.value.Field(field.index))
+		err := binder.Bind(field, s.target.Field(field.index))
 		if err != nil {
 			return err
 		}
@@ -65,7 +65,7 @@ func (s *Struct) BindValues(iterator FieldValueCollectionIterator, buildValueBin
 	for p := range iterator.Iterate() {
 		field, val := p.Field, p.Value
 		if val != nil {
-			binder := s.makeFieldBinder(s.value, field, buildValueBinder)
+			binder := s.makeFieldBinder(s.target, field, buildValueBinder)
 			if binder != nil {
 				err := binder.Bind(val)
 				if err != nil {
@@ -100,7 +100,7 @@ func (s *Struct) makeFieldBinder(rv reflect.Value, name string, buildValueBinder
 
 func makeStruct(value reflect.Value) *Struct {
 	prototype := Struct{
-		value:  value,
+		target: value,
 		fields: make(map[string]*Field),
 	}
 	return &prototype

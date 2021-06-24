@@ -5,7 +5,7 @@ import "reflect"
 type StructProtoContext Struct
 
 func (ctx *StructProtoContext) Target() reflect.Value {
-	return ctx.value
+	return ctx.target
 }
 
 func (ctx *StructProtoContext) Field(name string) FieldInfo {
