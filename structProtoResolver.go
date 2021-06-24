@@ -87,6 +87,7 @@ func (r *StructProtoResolver) internalResolve(rv reflect.Value) (*Struct, error)
 				name:  tag.Name,
 				index: i,
 				desc:  tag.Desc,
+				tag:   t.Field(i).Tag,
 			}
 			field.appendFlags(tag.Flags...)
 

@@ -7,7 +7,10 @@ import (
 	"github.com/bcowtech/structproto/internal"
 )
 
-var _ internal.ValueBinder = new(BytesArgsBinder)
+var (
+	_ internal.ValueBindProvider = BuildBytesArgsBinder
+	_ internal.ValueBinder       = new(BytesArgsBinder)
+)
 
 type BytesArgsBinder reflect.Value
 

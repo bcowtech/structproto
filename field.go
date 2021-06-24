@@ -1,5 +1,7 @@
 package structproto
 
+import "reflect"
+
 var _ FieldInfo = new(Field)
 
 type Field struct {
@@ -7,6 +9,7 @@ type Field struct {
 	desc  string
 	index int
 	flags FieldFlagSet
+	tag   reflect.StructTag
 }
 
 func (info *Field) Name() string {
@@ -27,6 +30,10 @@ func (info *Field) Flags() []string {
 
 func (info *Field) HasFlag(v string) bool {
 	return info.flags.Has(v)
+}
+
+func (info *Field) Tag() reflect.StructTag {
+	return info.tag
 }
 
 func (info *Field) appendFlags(values ...string) {

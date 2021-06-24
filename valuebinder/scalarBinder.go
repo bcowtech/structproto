@@ -9,7 +9,10 @@ import (
 	"github.com/cstockton/go-conv"
 )
 
-var _ internal.ValueBinder = new(ScalarBinder)
+var (
+	_ internal.ValueBindProvider = BuildScalarBinder
+	_ internal.ValueBinder       = new(ScalarBinder)
+)
 
 type ScalarBinder reflect.Value
 

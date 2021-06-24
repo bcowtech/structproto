@@ -20,16 +20,16 @@ func TestStructProtoContext(t *testing.T) {
 	}
 
 	expectedFields := []string{"NAME", "AGE", "ALIAS", "DATE_OF_BIRTH", "REMARK", "NUMBERS"}
-	if !reflect.DeepEqual(expectedFields, context.AllFields()) {
-		t.Errorf("assert 'structprotoContext.AllFields()':: expected '%#v', got '%#v'", expectedFields, context.AllFields())
+	if !reflect.DeepEqual(expectedFields, context.Names()) {
+		t.Errorf("assert 'structprotoContext.AllFields()':: expected '%#v', got '%#v'", expectedFields, context.Names())
 	}
 	expectedRequiredFields := []string{"AGE", "NAME"}
-	if !reflect.DeepEqual(expectedRequiredFields, context.AllRequiredFields()) {
-		t.Errorf("assert 'structprotoContext.AllRequiredFields()':: expected '%#v', got '%#v'", expectedRequiredFields, context.AllRequiredFields())
+	if !reflect.DeepEqual(expectedRequiredFields, context.RequiredFields()) {
+		t.Errorf("assert 'structprotoContext.AllRequiredFields()':: expected '%#v', got '%#v'", expectedRequiredFields, context.RequiredFields())
 	}
 
 	{
-		field := context.Field("NAME")
+		field := context.FieldInfo("NAME")
 		if field == nil {
 			t.Errorf("assert 'structprotoContext.Field(\"NAME\")':: expected not nil, got '%#v'", field)
 		}
@@ -45,11 +45,11 @@ func TestStructProtoContext(t *testing.T) {
 		}
 	}
 
-	if !context.IsRequiredField("NAME") {
-		t.Errorf("assert 'structprotoContext.IsRequiredField(\"NAME\")':: expected '%#v', got '%#v'", expectedRequiredFields, context.IsRequiredField("NAME"))
+	if !context.IsRequired("NAME") {
+		t.Errorf("assert 'structprotoContext.IsRequiredField(\"NAME\")':: expected '%#v', got '%#v'", expectedRequiredFields, context.IsRequired("NAME"))
 	}
-	if context.IsRequiredField("unknown") {
-		t.Errorf("assert 'structprotoContext.IsRequiredField(\"unknown\")':: expected '%#v', got '%#v'", expectedRequiredFields, context.IsRequiredField("unknown"))
+	if context.IsRequired("unknown") {
+		t.Errorf("assert 'structprotoContext.IsRequiredField(\"unknown\")':: expected '%#v', got '%#v'", expectedRequiredFields, context.IsRequired("unknown"))
 	}
 
 	// TODO: test context.ChechIfMissingRequireFields

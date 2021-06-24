@@ -11,11 +11,10 @@ const (
 )
 
 type (
-	ValueBinder = internal.ValueBinder
-	TagResolver = internal.TagResolver
-	Tag         = internal.Tag
-
-	ValueBinderProvider func(rv reflect.Value) ValueBinder
+	ValueBindProvider = internal.ValueBindProvider
+	ValueBinder       = internal.ValueBinder
+	TagResolver       = internal.TagResolver
+	Tag               = internal.Tag
 
 	FieldValueEntry struct {
 		Field string
@@ -32,6 +31,7 @@ type (
 		Index() int
 		Flags() []string
 		HasFlag(v string) bool
+		Tag() reflect.StructTag
 	}
 
 	StructBinder interface {

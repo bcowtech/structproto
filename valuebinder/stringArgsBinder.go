@@ -13,7 +13,10 @@ import (
 	"github.com/cstockton/go-conv"
 )
 
-var _ internal.ValueBinder = new(StringArgsBinder)
+var (
+	_ internal.ValueBindProvider = BuildStringArgsBinder
+	_ internal.ValueBinder       = new(StringArgsBinder)
+)
 
 type StringArgsBinder reflect.Value
 

@@ -43,7 +43,7 @@ func (s *Struct) Bind(binder StructBinder) error {
 	return nil
 }
 
-func (s *Struct) BindFields(values map[string]interface{}, buildValueBinder ValueBinderProvider) error {
+func (s *Struct) BindFields(values map[string]interface{}, buildValueBinder ValueBindProvider) error {
 	if s == nil {
 		return nil
 	}
@@ -51,7 +51,7 @@ func (s *Struct) BindFields(values map[string]interface{}, buildValueBinder Valu
 	return s.BindValues(FieldValueMap(values), buildValueBinder)
 }
 
-func (s *Struct) BindValues(iterator FieldValueCollectionIterator, buildValueBinder ValueBinderProvider) error {
+func (s *Struct) BindValues(iterator FieldValueCollectionIterator, buildValueBinder ValueBindProvider) error {
 	if s == nil {
 		return nil
 	}
@@ -90,7 +90,7 @@ func (s *Struct) BindValues(iterator FieldValueCollectionIterator, buildValueBin
 	return nil
 }
 
-func (s *Struct) makeFieldBinder(rv reflect.Value, name string, buildValueBinder ValueBinderProvider) ValueBinder {
+func (s *Struct) makeFieldBinder(rv reflect.Value, name string, buildValueBinder ValueBindProvider) ValueBinder {
 	if f, ok := s.fields[name]; ok {
 		binder := buildValueBinder(rv.Field(f.index))
 		return binder

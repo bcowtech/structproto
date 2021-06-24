@@ -16,4 +16,6 @@ var (
 	typeOfRawContent = reflect.TypeOf(types.RawContent(nil))
 )
 
+var _ internal.ValueBindProvider = BuildIgnoreBinder
+
 func BuildIgnoreBinder(rv reflect.Value) internal.ValueBinder { return nil }

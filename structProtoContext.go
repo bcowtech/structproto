@@ -8,14 +8,22 @@ func (ctx *StructProtoContext) Target() reflect.Value {
 	return ctx.target
 }
 
-func (ctx *StructProtoContext) Field(name string) FieldInfo {
+func (ctx *StructProtoContext) FieldInfo(name string) FieldInfo {
 	if field, ok := ctx.fields[name]; ok {
 		return field
 	}
 	return nil
 }
 
-func (ctx *StructProtoContext) AllFields() []string {
+func (ctx *StructProtoContext) Field(name string) (v reflect.Value, ok bool) {
+	info := ctx.FieldInfo(name)
+	if info != nil {
+		return ctx.target.Field(info.Index()), true
+	}
+	return reflect.Value{}, false
+}
+
+func (ctx *StructProtoContext) Names() []string {
 	var fields []string = make([]string, len(ctx.fields))
 	for _, v := range ctx.fields {
 		fields[v.index] = v.name
@@ -23,26 +31,26 @@ func (ctx *StructProtoContext) AllFields() []string {
 	return fields
 }
 
-func (ctx *StructProtoContext) AllRequiredFields() []string {
+func (ctx *StructProtoContext) RequiredFields() []string {
 	return ctx.requiredFields
 }
 
-func (ctx *StructProtoContext) IsRequiredField(name string) bool {
-	field := ctx.Field(name)
+func (ctx *StructProtoContext) IsRequired(name string) bool {
+	field := ctx.FieldInfo(name)
 	if field != nil {
 		return field.HasFlag(RequiredFlag)
 	}
 	return false
 }
 
-func (ctx *StructProtoContext) CheckIfMissingRequiredFields(fieldVisitFunc func() <-chan string) error {
+func (ctx *StructProtoContext) CheckIfMissingRequiredFields(visitFieldProc func() <-chan string) error {
 	if ctx.requiredFields.IsEmpty() {
 		return nil
 	}
 
 	var requiredFields = ctx.requiredFields.Clone()
 
-	for field := range fieldVisitFunc() {
+	for field := range visitFieldProc() {
 		index := requiredFields.IndexOf(field)
 		if index != -1 {
 			requiredFields.RemoveIndex(index)

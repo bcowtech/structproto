@@ -1,5 +1,7 @@
 package structproto
 
+var _ FieldValueCollectionIterator = new(FieldValueMap)
+
 type FieldValueMap map[string]interface{}
 
 func (values FieldValueMap) Iterate() <-chan FieldValueEntry {

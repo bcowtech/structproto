@@ -20,7 +20,7 @@ type mockCharacter struct {
 func TestResolveCharacterStruct(t *testing.T) {
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
-		TagName:             "demo",
+		TagName: "demo",
 	})
 	if err != nil {
 		t.Error(err)
@@ -31,36 +31,42 @@ func TestResolveCharacterStruct(t *testing.T) {
 			desc:  "",
 			index: 0,
 			flags: []string{"required"},
+			tag:   `demo:"*NAME"`,
 		},
 		"AGE": {
 			name:  "AGE",
 			desc:  "",
 			index: 1,
 			flags: []string{"required"},
+			tag:   `demo:"*AGE"`,
 		},
 		"ALIAS": {
 			name:  "ALIAS",
 			desc:  "",
 			index: 2,
 			flags: []string(nil),
+			tag:   `demo:"ALIAS"`,
 		},
 		"DATE_OF_BIRTH": {
 			name:  "DATE_OF_BIRTH",
 			desc:  "the character's birth of date",
 			index: 3,
 			flags: []string(nil),
+			tag:   `demo:"DATE_OF_BIRTH;the character's birth of date"`,
 		},
 		"REMARK": {
 			name:  "REMARK",
 			desc:  "note the character's personal favor",
 			index: 4,
 			flags: []string{"flag1", "flag2"},
+			tag:   `demo:"REMARK,flag1,flag2,,;note the character's personal favor"`,
 		},
 		"NUMBERS": {
 			name:  "NUMBERS",
 			desc:  "",
 			index: 5,
 			flags: []string(nil),
+			tag:   `demo:"NUMBERS"`,
 		},
 	}
 
@@ -74,6 +80,7 @@ func TestResolveCharacterStruct(t *testing.T) {
 			if (f.Name() != v.name) ||
 				(f.Index() != v.index) ||
 				(f.Desc() != v.desc) ||
+				(f.Tag() != v.tag) ||
 				(!reflect.DeepEqual([]string(f.Flags()), []string(v.flags))) {
 				t.Errorf("assert 'structproto.fields' key '%s' :: expected '%#v', got '%#v'", k, v, f)
 			}
@@ -155,7 +162,7 @@ func TestProcess_MissingRequiredField(t *testing.T) {
 
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
-		TagName:             "demo",
+		TagName: "demo",
 	})
 
 	err = prototype.Bind(binder)
@@ -185,7 +192,7 @@ func TestProcess(t *testing.T) {
 
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
-		TagName:             "demo",
+		TagName: "demo",
 	})
 	err = prototype.Bind(binder)
 	if err != nil {
