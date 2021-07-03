@@ -19,9 +19,9 @@ func TestStructProtoContext(t *testing.T) {
 		t.Error(err)
 	}
 
-	expectedFields := []string{"NAME", "AGE", "ALIAS", "DATE_OF_BIRTH", "REMARK", "NUMBERS"}
-	if !reflect.DeepEqual(expectedFields, context.Names()) {
-		t.Errorf("assert 'structprotoContext.AllFields()':: expected '%#v', got '%#v'", expectedFields, context.Names())
+	expectedFieldNames := []string{"NAME", "AGE", "ALIAS", "DATE_OF_BIRTH", "REMARK", "NUMBERS"}
+	if !reflect.DeepEqual(expectedFieldNames, context.FieldNames()) {
+		t.Errorf("assert 'structprotoContext.AllFields()':: expected '%#v', got '%#v'", expectedFieldNames, context.FieldNames())
 	}
 	expectedRequiredFields := []string{"AGE", "NAME"}
 	if !reflect.DeepEqual(expectedRequiredFields, context.RequiredFields()) {

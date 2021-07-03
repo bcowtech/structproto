@@ -92,7 +92,7 @@ func TestResolveCharacterStruct(t *testing.T) {
 	}
 }
 
-func TestVisit_Failed(t *testing.T) {
+func TestBindFields_MissingRequiredField(t *testing.T) {
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName: "demo",
@@ -110,7 +110,7 @@ func TestVisit_Failed(t *testing.T) {
 	}
 }
 
-func TestVisit(t *testing.T) {
+func TestBindValues_Well(t *testing.T) {
 	c := mockCharacter{}
 	prototype, err := Prototypify(&c, &StructProtoResolveOption{
 		TagName: "demo",
@@ -149,7 +149,7 @@ func TestVisit(t *testing.T) {
 	}
 }
 
-func TestProcess_MissingRequiredField(t *testing.T) {
+func TestBind_MissingRequiredField(t *testing.T) {
 	input := map[string]string{
 		"NAME": "luffy",
 		// "AGE":           "19",    -- we won't set the required field
@@ -179,7 +179,7 @@ func TestProcess_MissingRequiredField(t *testing.T) {
 	}
 }
 
-func TestProcess(t *testing.T) {
+func TestBind_Well(t *testing.T) {
 	input := map[string]string{
 		"NAME":          "luffy",
 		"AGE":           "19",

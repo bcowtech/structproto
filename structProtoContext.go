@@ -23,7 +23,7 @@ func (ctx *StructProtoContext) Field(name string) (v reflect.Value, ok bool) {
 	return reflect.Value{}, false
 }
 
-func (ctx *StructProtoContext) Names() []string {
+func (ctx *StructProtoContext) FieldNames() []string {
 	var fields []string = make([]string, len(ctx.fields))
 	for _, v := range ctx.fields {
 		fields[v.index] = v.name

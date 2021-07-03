@@ -12,37 +12,37 @@ type Field struct {
 	tag   reflect.StructTag
 }
 
-func (info *Field) Name() string {
-	return info.name
+func (f *Field) Name() string {
+	return f.name
 }
 
-func (info *Field) Desc() string {
-	return info.desc
+func (f *Field) Desc() string {
+	return f.desc
 }
 
-func (info *Field) Index() int {
-	return info.index
+func (f *Field) Index() int {
+	return f.index
 }
 
-func (info *Field) Flags() []string {
-	return info.flags
+func (f *Field) Flags() []string {
+	return f.flags
 }
 
-func (info *Field) HasFlag(v string) bool {
-	return info.flags.Has(v)
+func (f *Field) HasFlag(v string) bool {
+	return f.flags.Has(v)
 }
 
-func (info *Field) Tag() reflect.StructTag {
-	return info.tag
+func (f *Field) Tag() reflect.StructTag {
+	return f.tag
 }
 
-func (info *Field) appendFlags(values ...string) {
+func (f *Field) appendFlags(values ...string) {
 	if len(values) > 0 {
 		for _, v := range values {
 			if len(v) == 0 {
 				continue
 			}
-			info.flags.Append(v)
+			f.flags.Append(v)
 		}
 	}
 }
