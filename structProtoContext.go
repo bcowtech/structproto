@@ -55,6 +55,11 @@ func (ctx *StructProtoContext) CheckIfMissingRequiredFields(visitFieldProc func(
 		if index != -1 {
 			requiredFields.RemoveIndex(index)
 		}
+
+		// break loop if no more required fields
+		if requiredFields.IsEmpty() {
+			return nil
+		}
 	}
 
 	if !requiredFields.IsEmpty() {
