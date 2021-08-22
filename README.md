@@ -22,8 +22,7 @@ type mockCharacter struct {
 func main() {
   c := mockCharacter{}
   prototype, err := structproto.Prototypify(&c, &structproto.StructProtoOption{
-    TagName:             "demo",
-    ValueBinderProvider: valuebinder.BuildStringArgsBinder,
+    TagName: "demo",
   })
   if err != nil {
     panic(err)
@@ -33,7 +32,7 @@ func main() {
     "NAME":          "luffy",
     "ALIAS":         "lucy",
     "DATE_OF_BIRTH": "2020-05-05T00:00:00Z",
-  })
+  }, valuebinder.BuildStringArgsBinder)
   if err != nil {
     panic(err)
   }
